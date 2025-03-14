@@ -1,6 +1,8 @@
 package com.shiftm.shiftm.domain.objection.api;
 
+import com.shiftm.shiftm.domain.objection.domain.Objection;
 import com.shiftm.shiftm.domain.objection.dto.request.CreateObjectionReq;
+import com.shiftm.shiftm.domain.objection.dto.response.ObjectionRes;
 import com.shiftm.shiftm.domain.objection.service.ObjectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,8 @@ public class ObjectionController {
     private final ObjectionService objectionService;
 
     @PostMapping
-    public void createObjection(@Valid @RequestBody final CreateObjectionReq requestDto) {
-        objectionService.createObjection(requestDto);
+    public ObjectionRes createObjection(@Valid @RequestBody final CreateObjectionReq requestDto) {
+        final Objection objection =  objectionService.createObjection(requestDto);
+        return new ObjectionRes(objection);
     }
 }
