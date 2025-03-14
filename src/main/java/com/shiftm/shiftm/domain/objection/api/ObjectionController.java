@@ -21,7 +21,7 @@ public class ObjectionController {
 
     @PostMapping
     public ObjectionRes createObjection(@AuthId final String memberId, @Valid @RequestBody final CreateObjectionReq requestDto) {
-        final Objection objection =  objectionService.createObjection(requestDto);
+        final Objection objection =  objectionService.createObjection(memberId, requestDto);
         return new ObjectionRes(objection);
     }
 }

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class ObjectionService {
 
     @Transactional
-    public Objection createObjection(final CreateObjectionReq requestDto) {
+    public Objection createObjection(final String memberId, final CreateObjectionReq requestDto) {
     }
 }
