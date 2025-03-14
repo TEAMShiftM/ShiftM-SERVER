@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "objections")
@@ -19,14 +21,14 @@ public class Objection extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Long shiftId;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Type type;
 
     @Column(nullable = false)
-    private Long typeId;
-
-    @Column(nullable = false)
-    private String description;
+    private LocalDateTime updatedTime;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
