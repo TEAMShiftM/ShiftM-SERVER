@@ -14,6 +14,7 @@ import com.shiftm.shiftm.domain.member.repository.MemberFindDao;
 import com.shiftm.shiftm.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,10 +78,10 @@ public class LeaveRequestService {
     }
 
     @Transactional(readOnly = true)
-    public Page<LeaveRequest> getRequestLeaveInfos(final String memberId, final Pageable pageable) {
-        final Member member = memberFindDao.findById(memberId);
+    public Page<LeaveRequest> getLeaveRequestByMember(final String memberId, final int page, final int size) {
+        final Pageable pageable = PageRequest.of(page, size);
 
-        return leaveRequestRepository.findByMember(member, pageable);
+        return leaveRequestFindDao.findByMember(memberId, pageable);
     }
 
     @Transactional
@@ -104,15 +105,10 @@ public class LeaveRequestService {
     }
 
     @Transactional(readOnly = true)
-    public Page<LeaveRequest> getAllLeaveRequests(final Pageable pageable) {
-        return leaveRequestRepository.findAll(pageable);
-    }
+    public Page<LeaveRequest> getAllLeaveRequest(final int page, final int size) {
+        final Pageable pageable = PageRequest.of(page, size);
 
-    @Transactional(readOnly = true)
-    public Page<LeaveRequest> getLeaveRequest(final String memberId, final Pageable pageable) {
-        final Member member = memberFindDao.findById(memberId);
-
-        return leaveRequestRepository.findByMember(member, pageable);
+        return leaveRequestFindDao.findAll(pageable);
     }
 
     @Transactional
@@ -126,17 +122,5 @@ public class LeaveRequestService {
         leaveRequest.updateStatus(requestDto.status());
 
         return leaveRequest;
-    }
-
-    private LeaveRequest findById(final Long leaveRequestId) {
-        return leaveRequestRepository.findById(leaveRequestId).orElseThrow(LeaveRequestNotFoundException::new);
-    }
-
-    private void increaseLeaveCount(final Leave leave, final Double count) {
-        if (leave.getUsedCount() < 0 || count < 0) {
-            throw new LeaveRequestUpdateFailedException(ErrorCode.LEAVE_REQUEST_UPDATE_FAILED);
-        }
-
-        leave.updateUsedCount(leave.getUsedCount() - count);
     }
 }

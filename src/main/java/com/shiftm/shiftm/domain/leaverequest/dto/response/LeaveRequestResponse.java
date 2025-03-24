@@ -20,9 +20,8 @@ public record LeaveRequestResponse(
         @Schema(description = "연차 요청 상태")
         Status status
 ) {
-    public static LeaveRequestResponse of(final LeaveRequest leaveRequest) {
-        return new LeaveRequestResponse(leaveRequest.getId(), leaveRequest.getLeave().getLeaveType().getName(),
-                leaveRequest.getStartDate(), leaveRequest.getEndDate(), leaveRequest.getCount(),
-                leaveRequest.getStatus());
+    public LeaveRequestResponse(final LeaveRequest leaveRequest) {
+        this(leaveRequest.getId(), leaveRequest.getLeave().getLeaveType().getName(), leaveRequest.getStartDate(),
+                leaveRequest.getEndDate(), leaveRequest.getCount(), leaveRequest.getStatus());
     }
 }

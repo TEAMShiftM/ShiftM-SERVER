@@ -24,9 +24,9 @@ public record AdminLeaveRequestResponse(
         @Schema(description = "연차 요청 상태")
         Status status
 ) {
-    public static AdminLeaveRequestResponse of(final LeaveRequest leaveRequest) {
-        return new AdminLeaveRequestResponse(leaveRequest.getId(), leaveRequest.getLeave().getLeaveType().getName(),
-                leaveRequest.getMember().getId(), leaveRequest.getMember().getName(), leaveRequest.getStartDate(),
-                leaveRequest.getEndDate(), leaveRequest.getCount(), leaveRequest.getStatus());
+    public AdminLeaveRequestResponse(final LeaveRequest leaveRequest) {
+        this(leaveRequest.getId(), leaveRequest.getLeave().getLeaveType().getName(), leaveRequest.getMember().getId(),
+                leaveRequest.getMember().getName(), leaveRequest.getStartDate(), leaveRequest.getEndDate(),
+                leaveRequest.getCount(), leaveRequest.getStatus());
     }
 }
