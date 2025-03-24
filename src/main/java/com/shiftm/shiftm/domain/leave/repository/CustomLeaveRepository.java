@@ -80,11 +80,11 @@ public class CustomLeaveRepository {
 
     public Tuple findByMemberIdAndLeaveTypeAndExpirationDate(final String memberId, final LeaveType leaveType,
                                                              final LocalDate date) {
-        return queryFactory.select(qLeave.id, qLeave.leaveType.id, qLeave.leaveType.name, qLeave.count,
-                        qLeave.count.subtract(qLeave.usedCount))
+        return queryFactory.select(qLeave.count.sum(), qLeave.count.subtract(qLeave.usedCount).sum())
                 .from(qLeave)
                 .where(qLeave.member.id.eq(memberId),
                         qLeave.leaveType.eq(leaveType),
+                        qLeave.count.ne(qLeave.usedCount),
                         qLeave.expirationDate.goe(date))
                 .fetchOne();
     }

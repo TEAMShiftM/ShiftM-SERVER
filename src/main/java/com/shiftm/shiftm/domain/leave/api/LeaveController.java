@@ -20,9 +20,9 @@ public class LeaveController {
     @GetMapping("/{leaveTypeId}")
     public LeaveCountResponse getLeaveCountByLeaveType(@AuthId final String memberId,
                                                        @PathVariable("leaveTypeId") final Long leaveTypeId) {
-        final Tuple leaveTuple = leaveService.getLeaveCountByLeaveType(memberId, leaveTypeId);
+        final Tuple leaveCount = leaveService.getLeaveCountByLeaveType(memberId, leaveTypeId);
 
-        return LeaveCountResponse.of(leaveTuple);
+        return new LeaveCountResponse(leaveCount);
     }
 
     @GetMapping
