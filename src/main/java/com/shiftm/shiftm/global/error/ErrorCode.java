@@ -37,7 +37,7 @@ public enum ErrorCode {
     /* LEAVE REQUEST ERROR */
     LEAVE_NOT_ENOUGH(400, "LVR001", "Leave Not Enough"),
     LEAVE_REQUEST_NOT_AUTHOR(401, "LVR002", "Not the author."),
-    LEAVE_REQUEST_UPDATE_FAILED(400, "LVR003", "Leave request Update failed."),
+    INVALID_LEAVE_DATE(400, "LVR003", "Leave start or end date cannot be a holiday or weekend"),
     LEAVE_REQUEST_NOT_FOUND(404, "LVR004", "Leave request Not Found"),
     STATUS_ALREADY_EXISTS(400, "LVR005", "Leave request status already exists"),
 

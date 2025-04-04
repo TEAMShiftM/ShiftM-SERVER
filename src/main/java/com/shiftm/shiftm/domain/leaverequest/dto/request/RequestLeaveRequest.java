@@ -1,17 +1,15 @@
 package com.shiftm.shiftm.domain.leaverequest.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
+import java.util.List;
 
 public record RequestLeaveRequest(
         @NotNull
         Long leaveTypeId,
-        @NotNull
-        LocalDate startDate,
-        @NotNull
-        LocalDate endDate,
-        @NotNull
-        Double count
+        @Valid @Size(min = 1)
+        List<LeaveRequestPeriod> periodList
 ) {
 }
