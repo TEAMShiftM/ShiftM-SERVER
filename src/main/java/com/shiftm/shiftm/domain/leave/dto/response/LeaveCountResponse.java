@@ -6,7 +6,11 @@ public record LeaveCountResponse(
         Double count,
         Double usableCount
 ) {
-    public LeaveCountResponse(final Tuple leaveTuple) {
-        this(leaveTuple.get(0, Double.class), leaveTuple.get(1, Double.class));
+    public static LeaveCountResponse of(final Tuple leaveTuple) {
+        if (leaveTuple == null) {
+            return new LeaveCountResponse(null, null);
+        }
+
+        return new LeaveCountResponse(leaveTuple.get(0, Double.class), leaveTuple.get(1, Double.class));
     }
 }

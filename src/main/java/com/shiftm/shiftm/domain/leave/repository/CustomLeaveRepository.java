@@ -37,7 +37,7 @@ public class CustomLeaveRepository {
                 .fetchFirst() != null;
     }
 
-    public Page<Leave> findLeaveByMember(final Member member, final Pageable pageable) {
+    public Page<Leave> findByMember(final Member member, final Pageable pageable) {
         final NumberExpression<Integer> orderBy = new CaseBuilder()
                 .when(qLeave.expirationDate.goe(LocalDate.now()).and(qLeave.count.gt(qLeave.usedCount))).then(1)
                 .when(qLeave.expirationDate.goe(LocalDate.now()).and(qLeave.count.eq(qLeave.usedCount))).then(2)
@@ -78,9 +78,10 @@ public class CustomLeaveRepository {
         return new PageImpl<>(content, pageable, count);
     }
 
-    public Tuple findByMemberIdAndLeaveTypeAndExpirationDate(final String memberId, final LeaveType leaveType,
-                                                             final LocalDate date) {
-        return queryFactory.select(qLeave.count.sum(), qLeave.count.subtract(qLeave.usedCount).sum())
+    public Tuple findLeaveCountByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(final String memberId,
+                                                                                       final LeaveType leaveType,
+                                                                                       final LocalDate date) {
+        return queryFactory.select(qLeave.count, qLeave.count.subtract(qLeave.usedCount))
                 .from(qLeave)
                 .where(qLeave.member.id.eq(memberId),
                         qLeave.leaveType.eq(leaveType),

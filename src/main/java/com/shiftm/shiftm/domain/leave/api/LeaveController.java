@@ -22,7 +22,7 @@ public class LeaveController {
                                                        @PathVariable("leaveTypeId") final Long leaveTypeId) {
         final Tuple leaveCount = leaveService.getLeaveCountByLeaveType(memberId, leaveTypeId);
 
-        return new LeaveCountResponse(leaveCount);
+        return LeaveCountResponse.of(leaveCount);
     }
 
     @GetMapping
