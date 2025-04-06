@@ -108,7 +108,25 @@ public class LeaveRequestService {
             throw new StatusAlreadyExistsException();
         }
 
+        if (requestDto.status() == Status.APPROVED) {
+            approveLeaveRequest(leaveRequest);
+        }
+
         leaveRequest.updateStatus(requestDto.status());
+
+        return leaveRequest;
+    }
+
+    private LeaveRequest approveLeaveRequest(final LeaveRequest leaveRequest) {
+        final Leave leave = leaveRequest.getLeave();
+
+        final Double updateCount = ((leave.getUsedCount() * 100) + (leaveRequest.getCount() * 100)) / 100;
+
+        if (leave.getCount() < updateCount) {
+            throw new LeaveNotEnoughException(ErrorCode.LEAVE_NOT_ENOUGH);
+        }
+
+        leave.updateUsedCount(updateCount);
 
         return leaveRequest;
     }
@@ -169,7 +187,7 @@ public class LeaveRequestService {
     private Double validateUsableLeave(Leave leave) {
         final Double usableCount = ((leave.getCount() * 100) - (leave.getUsedCount() * 100)) / 100;
 
-        if (usableCount < 0) {
+        if (usableCount <= 0) {
             throw new LeaveNotEnoughException(ErrorCode.LEAVE_NOT_ENOUGH);
         }
 
