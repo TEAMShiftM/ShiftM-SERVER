@@ -1,5 +1,7 @@
 package com.shiftm.shiftm.infra.holiday;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.List;
 
 public record HolidayResponse(
@@ -19,6 +21,7 @@ public record HolidayResponse(
             Items items         // 공휴일 항목
     ) {}
 
+    @JsonDeserialize(using = ItemsDeserializer.class)
     public record Items(
             List<Item> item     // 여러 개의 공휴일 항목
     ) {}
