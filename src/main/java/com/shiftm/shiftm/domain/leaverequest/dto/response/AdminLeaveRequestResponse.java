@@ -19,14 +19,19 @@ public record AdminLeaveRequestResponse(
         LocalDate startDate,
         @Schema(description = "요청 연차의 종료일")
         LocalDate endDate,
-        @Schema(description = "연차 요청 일수")
+        @Schema(description = "연차 전체 수")
         Double count,
+        @Schema(description = "연차 사용 수")
+        Double usedCount,
+        @Schema(description = "연차 요청 일수")
+        Double requestCount,
         @Schema(description = "연차 요청 상태")
         Status status
 ) {
     public AdminLeaveRequestResponse(final LeaveRequest leaveRequest) {
         this(leaveRequest.getId(), leaveRequest.getLeave().getLeaveType().getName(), leaveRequest.getMember().getId(),
                 leaveRequest.getMember().getName(), leaveRequest.getStartDate(), leaveRequest.getEndDate(),
-                leaveRequest.getCount(), leaveRequest.getStatus());
+                leaveRequest.getLeave().getCount(), leaveRequest.getLeave().getUsedCount(), leaveRequest.getCount(),
+                leaveRequest.getStatus());
     }
 }
