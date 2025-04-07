@@ -9,11 +9,8 @@ import com.shiftm.shiftm.domain.leave.repository.LeaveTypeFindDao;
 import com.shiftm.shiftm.domain.leaverequest.domain.LeaveRequest;
 import com.shiftm.shiftm.domain.leaverequest.domain.LeaveRequestBuilder;
 import com.shiftm.shiftm.domain.leaverequest.domain.enums.Status;
-import com.shiftm.shiftm.domain.leaverequest.dto.LeaveRequestPeriodBuilder;
 import com.shiftm.shiftm.domain.leaverequest.dto.LeaveRequestStatusRequestBuilder;
-import com.shiftm.shiftm.domain.leaverequest.dto.ListLeaveRequestPeriodBuilder;
 import com.shiftm.shiftm.domain.leaverequest.dto.RequestLeaveRequestBuilder;
-import com.shiftm.shiftm.domain.leaverequest.dto.request.LeaveRequestPeriod;
 import com.shiftm.shiftm.domain.leaverequest.dto.request.LeaveRequestStatusRequest;
 import com.shiftm.shiftm.domain.leaverequest.dto.request.RequestLeaveRequest;
 import com.shiftm.shiftm.domain.leaverequest.exception.InvalidDateException;
@@ -154,24 +151,25 @@ public class LeaveRequestServiceTest extends UnitTest {
         leave.updateLeaveType(leaveType);
         leave.updateMember(member);
 
-        final List<LeaveRequest> leaveRequestList = List.of(leaveRequest);
+        final RequestLeaveRequest requestDto = RequestLeaveRequestBuilder.build(LocalDate.of(2025, 5, 2),
+                LocalDate.of(2025, 5, 7));
 
-        final LeaveRequestPeriod leaveRequestPeriod = LeaveRequestPeriodBuilder.build(LocalDate.of(2025, 4, 1),
-                LocalDate.of(2025, 4, 2), 8, null, null);
+        final List<LocalDate> holidayList = List.of(LocalDate.of(2025, 5, 3),
+                LocalDate.of(2025, 5, 4),
+                LocalDate.of(2025, 5, 5),
+                LocalDate.of(2025, 5, 6));
 
-        final RequestLeaveRequest requestLeaveRequest = RequestLeaveRequestBuilder.build(List.of(leaveRequestPeriod));
-
+        when(memberFindDao.findById(any())).thenReturn(member);
         when(leaveFindDao.findByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(any(), any(), any())).thenReturn(leave);
-        when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(List.of());
+        when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(holidayList);
 
-        leaveRequestList.get(0).getLeave().updateUsedCount(2.0);
-        when(leaveRequestRepository.saveAll(any())).thenReturn(leaveRequestList);
+        when(leaveRequestRepository.save(any())).thenReturn(leaveRequest);
 
         // when
-        final List<LeaveRequest> savedLeaveRequestList = leaveRequestService.requestLeave(null, requestLeaveRequest);
+        final LeaveRequest savedLeaveRequest = leaveRequestService.requestLeave(null, requestDto);
 
         // then
-        assertThat(savedLeaveRequestList.get(0).getLeave().getUsedCount()).isEqualTo(2.0);
+        assertThat(savedLeaveRequest.getCount()).isEqualTo(2.0);
     }
 
     @Description("연차 신청 실패 - 연차 신청 시작일이 주말인 경우")
@@ -185,16 +183,14 @@ public class LeaveRequestServiceTest extends UnitTest {
         leave.updateLeaveType(leaveType);
         leave.updateMember(member);
 
-        final LeaveRequestPeriod leaveRequestPeriod = LeaveRequestPeriodBuilder.build(LocalDate.of(2025, 4, 5),
-                LocalDate.of(2025, 4, 5), 8, null, null);
-
-        final RequestLeaveRequest requestLeaveRequest = RequestLeaveRequestBuilder.build(List.of(leaveRequestPeriod));
+        final RequestLeaveRequest requestDto = RequestLeaveRequestBuilder.build(LocalDate.of(2025, 5, 3),
+                LocalDate.of(2025, 5, 3));
 
         when(leaveFindDao.findByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(any(), any(), any())).thenReturn(leave);
         when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(List.of());
 
         // when, then
-        assertThrows(InvalidDateException.class, () -> leaveRequestService.requestLeave(null, requestLeaveRequest));
+        assertThrows(InvalidDateException.class, () -> leaveRequestService.requestLeave(null, requestDto));
     }
 
     @Description("연차 신청 실패 - 연차 신청 시작일이 공휴일인 경우")
@@ -208,16 +204,14 @@ public class LeaveRequestServiceTest extends UnitTest {
         leave.updateLeaveType(leaveType);
         leave.updateMember(member);
 
-        final LeaveRequestPeriod leaveRequestPeriod = LeaveRequestPeriodBuilder.build(LocalDate.of(2025, 4, 5),
-                LocalDate.of(2025, 4, 5), 8, null, null);
-
-        final RequestLeaveRequest requestLeaveRequest = RequestLeaveRequestBuilder.build(List.of(leaveRequestPeriod));
+        final RequestLeaveRequest requestDto = RequestLeaveRequestBuilder.build(LocalDate.of(2025, 5, 5),
+                LocalDate.of(2025, 5, 5));
 
         when(leaveFindDao.findByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(any(), any(), any())).thenReturn(leave);
-        when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(List.of(LocalDate.of(2025, 4, 5)));
+        when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(List.of(LocalDate.of(2025, 5, 5)));
 
         // when, then
-        assertThrows(InvalidDateException.class, () -> leaveRequestService.requestLeave(null, requestLeaveRequest));
+        assertThrows(InvalidDateException.class, () -> leaveRequestService.requestLeave(null, requestDto));
     }
 
     @Description("연차 신청 실패 - 연차 부족")
@@ -235,12 +229,13 @@ public class LeaveRequestServiceTest extends UnitTest {
         leave.updateLeaveType(leaveType);
         leave.updateMember(member);
 
-        final RequestLeaveRequest requestLeaveRequest = RequestLeaveRequestBuilder.build(ListLeaveRequestPeriodBuilder.build());
+        final RequestLeaveRequest requestDto = RequestLeaveRequestBuilder.build(LocalDate.of(2025, 5, 2),
+                LocalDate.of(2025, 5, 20));
 
         when(leaveFindDao.findByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(any(), any(), any())).thenReturn(leave);
         when(holidayClient.getHolidaysBetweenDates(any(), any())).thenReturn(List.of());
 
         // when, then
-        assertThrows(LeaveNotEnoughException.class, () -> leaveRequestService.requestLeave(null, requestLeaveRequest));
+        assertThrows(LeaveNotEnoughException.class, () -> leaveRequestService.requestLeave(null, requestDto));
     }
 }
