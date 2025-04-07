@@ -146,7 +146,7 @@ public class LeaveRequestService {
                 .collect(Collectors.toSet());
     }
 
-    private void validatePeriod(List<LeaveRequestPeriod> periodList, Set<LocalDate> holidayList) {
+    private void validatePeriod(final List<LeaveRequestPeriod> periodList, final Set<LocalDate> holidayList) {
         for (LeaveRequestPeriod period : periodList) {
             if (holidayList.contains(period.startDate()) || period.startDate().getDayOfWeek() == DayOfWeek.SATURDAY ||
                     period.startDate().getDayOfWeek() == DayOfWeek.SUNDAY) {
@@ -184,7 +184,7 @@ public class LeaveRequestService {
                 .collect(Collectors.toList());
     }
 
-    private Double validateUsableLeave(Leave leave) {
+    private Double validateUsableLeave(final Leave leave) {
         final Double usableCount = ((leave.getCount() * 100) - (leave.getUsedCount() * 100)) / 100;
 
         if (usableCount <= 0) {
@@ -231,7 +231,7 @@ public class LeaveRequestService {
                 leaveRequestList.add(leaveRequest);
             } else {
                 // 시작일부터 종료일까지 휴일 또는 공휴일 제외한 날 가져오기
-                List<LocalDate> validDateList = getValidDateList(period, holidayList);
+                final List<LocalDate> validDateList = getValidDateList(period, holidayList);
 
                 totalRequestCount = updateTotalRequestCount(totalRequestCount, (double) validDateList.size(), usableCount);
 
