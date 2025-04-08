@@ -65,7 +65,7 @@ public class LeaveService {
     public Tuple getLeaveCountByLeaveType(final String memberId, final Long leaveTypeId) {
         final LeaveType leaveType = leaveTypeFindDao.findById(leaveTypeId);
 
-        return leaveFindDao.findByMemberIdAndLeaveTypeAndExpirationDate(memberId, leaveType, LocalDate.now());
+        return leaveFindDao.findLeaveCountByMemberIdAndLeaveTypeAndExpirationDateGreaterThanEqual(memberId, leaveType, LocalDate.now());
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +81,7 @@ public class LeaveService {
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        return leaveFindDao.findLeaveByMember(member, pageable);
+        return leaveFindDao.findByMember(member, pageable);
     }
 
     private Leave toEntity(final CreateLeaveRequest requestDto, final LeaveType leaveType) {

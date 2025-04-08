@@ -21,11 +21,13 @@ public abstract class BaseEntity {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(insertable = false)
     private LocalDateTime updatedAt;
 
     @Setter
     private LocalDateTime deletedAt;
 
     @LastModifiedBy
+    @Column(insertable = false)
     private String updatedBy;
 }

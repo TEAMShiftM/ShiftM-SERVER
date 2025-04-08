@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +31,10 @@ public class LeaveRequest extends BaseEntity {
     @Column(nullable = false)
     private Double count;
 
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -43,9 +48,12 @@ public class LeaveRequest extends BaseEntity {
     private Leave leave;
 
     @Builder
-    public LeaveRequest(final LocalDate startDate, final LocalDate endDate, Double count, final Status status) {
+    public LeaveRequest(final LocalDate startDate, final LocalDate endDate, final LocalTime startTime,
+            final LocalTime endTime, final Double count, final Status status) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.count = count;
         this.status = status;
     }
