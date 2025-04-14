@@ -10,6 +10,8 @@ public record CreateObjectionReq(
         Long shiftId,
         @NotBlank
         String type,
+        @NotBlank
+        String updatedType,
         @NotNull
         LocalDateTime updatedTime
 ) {

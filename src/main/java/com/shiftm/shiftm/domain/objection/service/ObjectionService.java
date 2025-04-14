@@ -12,9 +12,6 @@ public class ObjectionService {
 
     @Transactional
     public Objection createObjection(final String memberId, final CreateObjectionReq requestDto) {
-        final Checkin
-        // type을 바탕으로 생성, 수정, 결정
-        // 생성 또는 수정
-        // 리턴
+
     }
 }

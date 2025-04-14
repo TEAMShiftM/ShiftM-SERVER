@@ -2,11 +2,10 @@ package com.shiftm.shiftm.domain.objection.domain;
 
 import com.shiftm.shiftm.domain.member.domain.Member;
 import com.shiftm.shiftm.domain.objection.domain.enums.Status;
-import com.shiftm.shiftm.domain.objection.domain.enums.Type;
+import com.shiftm.shiftm.domain.objection.domain.enums.ShiftType;
 import com.shiftm.shiftm.global.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,11 +21,11 @@ public class Objection extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long shiftId;
+    private Long targetShiftId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private ShiftType shiftType;
 
     @Column(nullable = false)
     private LocalDateTime updatedTime;
@@ -38,17 +37,4 @@ public class Objection extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @Builder
-    public Objection(final Long shiftId,
-                     final Type type,
-                     final LocalDateTime updatedTime,
-                     final Status status,
-                     final Member member) {
-        this.shiftId = shiftId;
-        this.type = type;
-        this.updatedTime = updatedTime;
-        this.status = status;
-        this.member = member;
-    }
 }
