@@ -6,6 +6,7 @@ import com.shiftm.shiftm.domain.objection.domain.enums.ShiftType;
 import com.shiftm.shiftm.global.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,17 @@ public class Objection extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public Objection(final Long targetShiftId,
+                     final ShiftType shiftType,
+                     final LocalDateTime updatedTime,
+                     final Status status,
+                     final Member member) {
+        this.targetShiftId = targetShiftId;
+        this.shiftType = shiftType;
+        this.updatedTime = updatedTime;
+        this.status = status;
+        this.member = member;
+    }
 }
