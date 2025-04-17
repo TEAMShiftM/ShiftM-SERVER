@@ -7,11 +7,9 @@ import java.time.LocalDateTime;
 
 public record CreateObjectionReq(
         @NotNull
-        Long shiftId,
+        Long targetShiftId,
         @NotBlank
-        String type,
-        @NotBlank
-        String updatedType,
+        String shiftType,
         @NotNull
         LocalDateTime updatedTime
 ) {
