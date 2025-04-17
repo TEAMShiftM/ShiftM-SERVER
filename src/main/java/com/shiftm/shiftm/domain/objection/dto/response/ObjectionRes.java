@@ -13,4 +13,7 @@ public record ObjectionRes(
         LocalDateTime updatedTime,
         Status status
 ) {
+    public ObjectionRes(final Objection objection) {
+        this(objection.getId(), objection.getTargetShiftId(), objection.getShiftType(), objection.getUpdatedTime(), objection.getStatus());
+    }
 }
