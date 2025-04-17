@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ObjectionService {
@@ -21,5 +23,10 @@ public class ObjectionService {
     public Objection createObjection(final String memberId, final CreateObjectionReq requestDto) {
         final Member member = memberFindDao.findById(memberId);
         return objectionRepository.save(requestDto.toEntity(member));
+    }
+
+    public List<Objection> getObjectionList(final String memberId) {
+        final Member member = memberFindDao.findById(memberId);
+        return objectionRepository.findAllByMember(member);
     }
 }
